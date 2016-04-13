@@ -28,6 +28,9 @@ class BTree
         bool is_word_in_tree(string word);
         void Inorder(BTreeNode *ptr);
         int maxDepth(BTreeNode* node);
+
+        bool test_is_words(BTreeNode *u, vector<string> rs, bool in[]);//functions i created
+        bool test_add_words(BTreeNode *e, vector<string> ws);
     private:
         bool add_node(BTreeNode *parent, char Data);
 };
@@ -115,6 +118,56 @@ bool get_reads(char * file_name, vector<string> &r);
 bool write_vector_to_screen(vector<string> v);
 bool write_vector_to_file(vector<string> v, char * file_name);
 
+bool BTree::test_add_words(BTreeNode *e, vector<string> ws)
+{BTreeNode *Temp = e;
+for (int h=0; h<ws.size(); h++){ //nested for loop for the vector
+    for (int j=0; j < ws.size(); j++){
+            if (ws[h][j] == 'r' || ws[h][j] == 'R'){
+                 if ((Temp -> Lchild)== NULL) return false;}
+                 //else{Temp = Temp -> Lchild;}}
+            /*case 'R' :{
+                if ((Temp -> Lchild)== NULL) return false;
+                 else{Temp = Temp -> Lchild;}} */
+            else if (ws[h][j] == 'y' || ws[h][j] == 'Y'){
+                 if ((Temp -> Rchild) == NULL) return false;}
+                 //else{Temp = Temp -> Rchild;}}
+            /*case 'Y' :{
+                 if ((Temp -> Rchild) == NULL) return false;
+                 else{Temp = Temp -> Rchild;}}*/
+    }
+}
+    return true;
+}
+
+bool BTree::test_is_words(BTreeNode *u, vector<string> rs, bool in[])
+{   bool results[0]; // an array created to compare the bool array in main
+    BTreeNode *Temp = new BTreeNode;
+    Temp = u; //assigned temp to u to prevent change affecting u node
+
+    for(int c=0; c < rs.size(); c++){ //nested for loop to go through the vector
+        for (int v=0; v < rs.size(); v++){
+            //if (reads[c][v])
+            switch (rs[c][v]){
+            case 'r' :{
+                 if ((Temp -> Lchild)== NULL) results[c] = 0; //0 if her function didn't find word, 1 if it did
+                /* else{Temp = Temp -> Lchild;} */}
+            case 'R' :{
+                if ((Temp -> Lchild)== NULL) results[c] = 0;
+                /* else{Temp = Temp -> Lchild;} */}
+            case 'y' :{
+                 if ((Temp -> Rchild) == NULL) results[c] = 0;
+                /* else{Temp = Temp -> Rchild;} */}
+            case 'Y' :{
+                 if ((Temp -> Rchild) == NULL) results[c] = 0;
+              /*   else{Temp = Temp -> Rchild;} */}
+                                }
+        }
+        if (results[c] != 0) results[c] = 1;
+        else if (results[c] != in[c]) return false;
+    }
+    return true;
+}
+
 int main()
 {
     vector<string> words;
@@ -128,8 +181,10 @@ int main()
     for(int i=0;i<words.size();i++)
         b->add_word_to_tree(words[i]);
 
-    /** TEST 1 -- IS THE TREE CORRECTLY SET UP AND POPULATED **/
-
+    /** TEST 1 -- IS THE TREE CORRECTLY SET UP AND POPULATED **/ //use height test
+    BTreeNode *root = new BTreeNode;
+    if (b->test_add_words (root, words) == false) cout << "tree is correctly setup and populated" << endl; //if nothing is found (which is true) then,
+    else cout << "tree is not correctly setup and populated" << endl; //if its false then the tree is setup correctly
 
     vector<string> reads;
     char * reads_file_name="input2.txt";       //make certain to place this file in the correct folder. Do not change path.
@@ -142,6 +197,9 @@ int main()
         is_in[i]=b->is_word_in_tree(reads[i]);
 
     /** TEST 2 -- IS THE TREE CORRECTLY SEARCHED **/
+    BTreeNode *ro = new BTreeNode;
+    if (b->test_is_words (ro, reads, is_in) == false) cout << "tree is correctly searched" << endl; //the same as the 1st test
+    else cout << "tree is not correctly searched" << endl;
 
 
     delete is_in;
