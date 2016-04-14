@@ -139,44 +139,36 @@ for (int h=0; h<ws.size(); h++){ //nested for loop for the vector
 }
 
 bool BTree::test_is_words(BTreeNode *u, vector<string> rs, bool in[])
-{   bool results[rs.size()]; // an array created to compare the bool array in main
-    BTreeNode *Temp = Root; //assigned temp to u to prevent change affecting u node
-
+{   bool results[rs.size()]; // an empty array created to compare the bool array in main
+    BTreeNode *Temp = Root;
+    //cout << "R: " << sizeof(results) << " rs size:" << rs.size() << endl; //use for helping me debug/ see what the problem is
     for(int c=0; c < rs.size(); c++){ //nested for loop to go through the vector
         Temp = Root;
         for (int v=0; v < rs[c].size(); v++){
-                cout << v << "*" << rs[c] << "- rs[c][v] :" << rs[c][v] << endl;
+                //cout << v << "*" << "- rs[c][v] :" << rs[c][v] << endl; // used for debugging this function
             switch (rs[c][v]){//used my search function from HW4 but revised it
             case 'r' :
-                 if ((Temp -> Lchild)== NULL) {results[c] = 0; v=rs[c].size();} //0 if her function didn't find letter
-                else Temp=Temp->Lchild;
-                break;
+                 if ((Temp -> Lchild)== NULL) {results[c] = 0; v=rs[c].size(); } //0 if her function didn't find letter
+                else {Temp=Temp->Lchild; results[c] = 1;} //i made results[c] = 1 in else because the empty bool array
+                break;                                     // will just be assigned to random numbers as elements
             case 'R' :
                 if ((Temp -> Lchild)== NULL) {results[c] = 0; v=rs[c].size();}
-                else Temp=Temp->Lchild;
+                else {Temp=Temp->Lchild; results[c] = 1;}
                 break;
             case 'y' :
                  if ((Temp -> Rchild) == NULL) {results[c] = 0; v=rs[c].size();}
-                  else Temp=Temp->Rchild;
+                  else {Temp=Temp->Rchild; results[c] = 1;}
                 break;
             case 'Y' :
                  if ((Temp -> Rchild) == NULL) {results[c] = 0; v=rs[c].size();}
-                else Temp=Temp->Rchild;
+                else {Temp=Temp->Rchild; results[c] = 1;}
                 break;
                                 }
-                /*if (rs[c][v] == 'r' || rs[c][v] == 'R'){
-                 if ((Temp -> Lchild)== NULL)
-                     {results[c] = 0; v=rs[c].size();cout << v << "*" << endl;}
-                else Temp=Temp->Lchild;}
-
-                else if (rs[c][v] == 'y' || rs[c][v] == 'Y'){
-                 if ((Temp -> Rchild) == NULL)
-                 {results[c] = 0; v=rs[c].size();}
-                 else Temp=Temp->Rchild;} */
         }
-        cout << c << endl;
-        if (results[c] != 0) results[c] = 1;                // 1 if it did
-        else if (results[c] != in[c]) return false;
+        //cout << c << endl; used for debugging
+        //cout << "results: " << results[c] << endl; used for debugging
+        if (results[c] != 0) {results[c] = 1;} // 1 if it did //cout << results[c] << "#" << endl;
+        if (results[c] != in[c]) {return false;}  //this doesn't activate until all the loops are done and runs at the end //cout << "return false << " << "in[c]: " << in[c] << endl;
     }
     return true;
 }
